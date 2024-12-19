@@ -1,0 +1,25 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.11.35327.3
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MyWayAPI", "MyWayAPI\MyWayAPI.csproj", "{AE714024-C211-48F4-9134-32F84E965779}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AE714024-C211-48F4-9134-32F84E965779}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AE714024-C211-48F4-9134-32F84E965779}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AE714024-C211-48F4-9134-32F84E965779}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AE714024-C211-48F4-9134-32F84E965779}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {53D7C641-5205-442A-B8D3-E74FE4A14313}
+	EndGlobalSection
+EndGlobal
