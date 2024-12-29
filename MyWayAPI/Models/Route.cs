@@ -1,4 +1,6 @@
-﻿namespace MyWayAPI.Models
+﻿using MyWayAPI.Models.App;
+
+namespace MyWayAPI.Models
 {
     public class Route
     {

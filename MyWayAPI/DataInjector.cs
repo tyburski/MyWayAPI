@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using MyWayAPI.Models;
+using MyWayAPI.Models.App;
 
 namespace MyWayAPI
 {
@@ -9,6 +10,14 @@ namespace MyWayAPI
         {
             using(var dbContext = new MWDbContext())
             {
+                var admin = dbContext.Admin.Any();
+                if(!admin)
+                {
+                    var newAdmin = new Admin();
+                    newAdmin.Credentials("admin", "admin");
+                    dbContext.Admin.Add(newAdmin);
+                    dbContext.SaveChanges();
+                }
                 var appUsers = dbContext.AppUsers.Any();
                 if (!appUsers)
                 {

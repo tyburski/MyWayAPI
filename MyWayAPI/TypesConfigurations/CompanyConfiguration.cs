@@ -14,6 +14,10 @@ namespace MyWayAPI.TypesConfigurations
                 .WithOne(u => u.Company)
                 .HasForeignKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Cascade);
+            builder.HasMany(u => u.Invitations)
+                .WithOne(u => u.Company)
+                .HasForeignKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Cascade);
 
         }
     }

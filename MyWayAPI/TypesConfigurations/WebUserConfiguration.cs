@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
-using MyWayAPI.Models;
+using MyWayAPI.Models.Web;
 
 namespace MyWayAPI.TypesConfigurations
 {
@@ -11,11 +11,6 @@ namespace MyWayAPI.TypesConfigurations
             builder.HasKey(u => u.Id);
 
             builder.HasOne(u => u.Company)
-                .WithMany(u => u.WebUsers)
-                .HasForeignKey(u => u.Id)
-                .OnDelete(DeleteBehavior.Restrict);
-
-            builder.HasOne(u => u.Role)
                 .WithMany(u => u.WebUsers)
                 .HasForeignKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Restrict);

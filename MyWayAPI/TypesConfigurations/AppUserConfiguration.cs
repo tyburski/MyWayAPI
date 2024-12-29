@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore;
-using MyWayAPI.Models;
+using MyWayAPI.Models.App;
 
 namespace MyWayAPI.TypesConfigurations
 {
@@ -12,6 +12,10 @@ namespace MyWayAPI.TypesConfigurations
 
             builder.HasMany(u => u.Companies)
                 .WithMany(u => u.AppUsers);
+            builder.HasMany(u => u.Invitations)
+                .WithOne(u => u.AppUser)
+                .HasForeignKey(u => u.Id)
+                .OnDelete(DeleteBehavior.Cascade);
         }
     }
 }
