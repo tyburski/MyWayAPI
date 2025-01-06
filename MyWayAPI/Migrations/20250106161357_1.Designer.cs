@@ -12,8 +12,8 @@ using MyWayAPI;
 namespace MyWayAPI.Migrations
 {
     [DbContext(typeof(MWDbContext))]
-    [Migration("20241208122445_init1")]
-    partial class init1
+    [Migration("20250106161357_1")]
+    partial class _1
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -40,7 +40,31 @@ namespace MyWayAPI.Migrations
                     b.ToTable("AppUserCompany");
                 });
 
-            modelBuilder.Entity("MyWayAPI.Models.AppUser", b =>
+            modelBuilder.Entity("MyWayAPI.Models.Admin", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<int>("AccessLevel")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Login")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Password")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Admin");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.App.AppUser", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -64,7 +88,12 @@ namespace MyWayAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("startedRouteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("startedRouteId");
 
                     b.ToTable("AppUsers");
                 });
@@ -81,34 +110,22 @@ namespace MyWayAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int>("OwnerId")
-                        .HasColumnType("int");
-
                     b.Property<int>("TaxId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("OwnerId");
-
                     b.ToTable("Companies");
                 });
 
-            modelBuilder.Entity("MyWayAPI.Models.Role", b =>
+            modelBuilder.Entity("MyWayAPI.Models.Invitation", b =>
                 {
                     b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
                         .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("RoleName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
 
-                    b.ToTable("Roles");
+                    b.ToTable("Invitations");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Route", b =>
@@ -116,15 +133,10 @@ namespace MyWayAPI.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Finished")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Routes");
                 });
@@ -156,9 +168,30 @@ namespace MyWayAPI.Migrations
                     b.ToTable("RouteEvents");
                 });
 
-            modelBuilder.Entity("MyWayAPI.Models.WebUser", b =>
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
                 {
                     b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vehicles");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Web.WebUser", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<int>("AccessLevel")
                         .HasColumnType("int");
 
                     b.Property<string>("EmailAddress")
@@ -184,7 +217,7 @@ namespace MyWayAPI.Migrations
 
             modelBuilder.Entity("AppUserCompany", b =>
                 {
-                    b.HasOne("MyWayAPI.Models.AppUser", null)
+                    b.HasOne("MyWayAPI.Models.App.AppUser", null)
                         .WithMany()
                         .HasForeignKey("AppUsersId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -197,22 +230,39 @@ namespace MyWayAPI.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("MyWayAPI.Models.Company", b =>
+            modelBuilder.Entity("MyWayAPI.Models.App.AppUser", b =>
                 {
-                    b.HasOne("MyWayAPI.Models.WebUser", "Owner")
+                    b.HasOne("MyWayAPI.Models.Route", "startedRoute")
                         .WithMany()
-                        .HasForeignKey("OwnerId")
+                        .HasForeignKey("startedRouteId");
+
+                    b.Navigation("startedRoute");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Invitation", b =>
+                {
+                    b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
+                        .WithMany("Invitations")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Owner");
+                    b.HasOne("MyWayAPI.Models.Company", "Company")
+                        .WithMany("Invitations")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+
+                    b.Navigation("Company");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Route", b =>
                 {
-                    b.HasOne("MyWayAPI.Models.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
+                    b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
+                        .WithMany("Routes")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -222,9 +272,17 @@ namespace MyWayAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyWayAPI.Models.Vehicle", "Vehicle")
+                        .WithMany("Routes")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Company");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.RouteEvent", b =>
@@ -238,7 +296,18 @@ namespace MyWayAPI.Migrations
                     b.Navigation("Route");
                 });
 
-            modelBuilder.Entity("MyWayAPI.Models.WebUser", b =>
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
+                {
+                    b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Web.WebUser", b =>
                 {
                     b.HasOne("MyWayAPI.Models.Company", "Company")
                         .WithMany("WebUsers")
@@ -246,32 +315,35 @@ namespace MyWayAPI.Migrations
                         .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
-                    b.HasOne("MyWayAPI.Models.Role", "Role")
-                        .WithMany("WebUsers")
-                        .HasForeignKey("Id")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
                     b.Navigation("Company");
+                });
 
-                    b.Navigation("Role");
+            modelBuilder.Entity("MyWayAPI.Models.App.AppUser", b =>
+                {
+                    b.Navigation("Invitations");
+
+                    b.Navigation("Routes");
+
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Company", b =>
                 {
+                    b.Navigation("Invitations");
+
                     b.Navigation("Routes");
 
-                    b.Navigation("WebUsers");
-                });
-
-            modelBuilder.Entity("MyWayAPI.Models.Role", b =>
-                {
                     b.Navigation("WebUsers");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Route", b =>
                 {
                     b.Navigation("RouteEvents");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
+                {
+                    b.Navigation("Routes");
                 });
 #pragma warning restore 612, 618
         }

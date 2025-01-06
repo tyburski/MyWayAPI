@@ -46,8 +46,8 @@ namespace MyWayAPI.Services.Web
                 company.AddWebUser(newUser);
                 
 
-                mailService.SendEmail(newUser.EmailAddress, "Utworzenie firmy w systemie",
-                 $"Witaj,{newUser.FirstName} \n Firma {company.Name} została utworzona. \n Twój login to: {newUser.EmailAddress} \n, a wygenerowane hasło to: {newUser.Password}. \n Pamiętaj aby zmienić hasło jak najszybciej to możliwe!");
+                //mailService.SendEmail(newUser.EmailAddress, "Utworzenie firmy w systemie",
+                // $"Witaj,{newUser.FirstName} \n Firma {company.Name} została utworzona. \n Twój login to: {newUser.EmailAddress} \n, a wygenerowane hasło to: {newUser.Password}. \n Pamiętaj aby zmienić hasło jak najszybciej to możliwe!");
                 dbContext.SaveChanges();
                 return true;
             }

@@ -85,7 +85,12 @@ namespace MyWayAPI.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
+                    b.Property<int?>("startedRouteId")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
+
+                    b.HasIndex("startedRouteId");
 
                     b.ToTable("AppUsers");
                 });
@@ -125,15 +130,10 @@ namespace MyWayAPI.Migrations
                     b.Property<int>("Id")
                         .HasColumnType("int");
 
-                    b.Property<int>("AppUserId")
-                        .HasColumnType("int");
-
                     b.Property<bool>("Finished")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("AppUserId");
 
                     b.ToTable("Routes");
                 });
@@ -163,6 +163,24 @@ namespace MyWayAPI.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("RouteEvents");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
+                {
+                    b.Property<int>("Id")
+                        .HasColumnType("int");
+
+                    b.Property<string>("LicensePlate")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Type")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("Vehicles");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Web.WebUser", b =>
@@ -209,6 +227,15 @@ namespace MyWayAPI.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("MyWayAPI.Models.App.AppUser", b =>
+                {
+                    b.HasOne("MyWayAPI.Models.Route", "startedRoute")
+                        .WithMany()
+                        .HasForeignKey("startedRouteId");
+
+                    b.Navigation("startedRoute");
+                });
+
             modelBuilder.Entity("MyWayAPI.Models.Invitation", b =>
                 {
                     b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
@@ -231,8 +258,8 @@ namespace MyWayAPI.Migrations
             modelBuilder.Entity("MyWayAPI.Models.Route", b =>
                 {
                     b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
-                        .WithMany()
-                        .HasForeignKey("AppUserId")
+                        .WithMany("Routes")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
@@ -242,9 +269,17 @@ namespace MyWayAPI.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("MyWayAPI.Models.Vehicle", "Vehicle")
+                        .WithMany("Routes")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.NoAction)
+                        .IsRequired();
+
                     b.Navigation("AppUser");
 
                     b.Navigation("Company");
+
+                    b.Navigation("Vehicle");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.RouteEvent", b =>
@@ -256,6 +291,17 @@ namespace MyWayAPI.Migrations
                         .IsRequired();
 
                     b.Navigation("Route");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
+                {
+                    b.HasOne("MyWayAPI.Models.App.AppUser", "AppUser")
+                        .WithMany("Vehicles")
+                        .HasForeignKey("Id")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("AppUser");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Web.WebUser", b =>
@@ -272,6 +318,10 @@ namespace MyWayAPI.Migrations
             modelBuilder.Entity("MyWayAPI.Models.App.AppUser", b =>
                 {
                     b.Navigation("Invitations");
+
+                    b.Navigation("Routes");
+
+                    b.Navigation("Vehicles");
                 });
 
             modelBuilder.Entity("MyWayAPI.Models.Company", b =>
@@ -286,6 +336,11 @@ namespace MyWayAPI.Migrations
             modelBuilder.Entity("MyWayAPI.Models.Route", b =>
                 {
                     b.Navigation("RouteEvents");
+                });
+
+            modelBuilder.Entity("MyWayAPI.Models.Vehicle", b =>
+                {
+                    b.Navigation("Routes");
                 });
 #pragma warning restore 612, 618
         }

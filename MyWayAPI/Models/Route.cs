@@ -7,6 +7,7 @@ namespace MyWayAPI.Models
         public int Id { get; set; }
         public AppUser AppUser { get; set; }
         public Company Company { get; set; }
+        public Vehicle Vehicle { get; set; }
         public List<RouteEvent> RouteEvents { get; set; }
         public bool Finished { get; set; }
     }

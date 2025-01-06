@@ -13,7 +13,6 @@ namespace MyWayAPI.TypesConfigurations
                 .WithOne(u => u.Route)
                 .HasForeignKey(u => u.Id)
                 .OnDelete(DeleteBehavior.Cascade);
-
         }
     }
 }

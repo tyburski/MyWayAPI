@@ -14,6 +14,8 @@ namespace MyWayAPI.Services
         public int? Login(LoginModel model);
         public bool Register(AppRegisterModel model);
         public string GenerateToken(int? userId);
+        public List<Company> GetCompanies(int userId);
+        public bool DeleteCompany(int userId, int companyId);
     }
     public class AppAccountService : IAppAccountService
     {
@@ -49,7 +51,8 @@ namespace MyWayAPI.Services
                 var newUser = new AppUser
                 {
                     FirstName = model.firstName,
-                    LastName = model.lastName
+                    LastName = model.lastName,
+                    startedRoute = null
                 };
                 newUser.SetEmailAddress(model.emailAddress);
                 newUser.SetPassword(model.password);
@@ -65,6 +68,7 @@ namespace MyWayAPI.Services
 
             var claims = new List<Claim>();
             var claim = new Claim("sub", userId.ToString());
+            claims.Add(claim);
 
             var Sectoken = new JwtSecurityToken(config["Jwt:Issuer"],
               config["Jwt:Issuer"],
@@ -75,6 +79,29 @@ namespace MyWayAPI.Services
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
 
             return token;
+        }
+
+        public List<Company> GetCompanies(int userId)
+        {
+            var user = dbContext.AppUsers.FirstOrDefault(u => u.Id == userId);
+            return user.Companies;
+        }
+
+        public bool DeleteCompany(int userId, int companyId)
+        {
+            var user = dbContext.AppUsers.FirstOrDefault(u => u.Id == userId);
+            var company = dbContext.Companies.FirstOrDefault(c=> c.Id == companyId);
+            var userInCompany = user.Companies.FirstOrDefault(c => c.Id == companyId);
+
+            if (user is null || company is null) return false;
+            else if (userInCompany is null) return false;
+            else
+            {
+                user.Companies.Remove(company);
+                company.AppUsers.Remove(user);
+                dbContext.SaveChanges();
+                return true;
+            }
         }
     }
 }

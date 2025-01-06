@@ -3,6 +3,7 @@ using MyWayAPI.Models;
 using MyWayAPI.Models.App;
 using MyWayAPI.Models.Web;
 using MyWayAPI.Services;
+using System.IdentityModel.Tokens.Jwt;
 
 namespace MyWayAPI.Controllers.App
 {
@@ -29,7 +30,7 @@ namespace MyWayAPI.Controllers.App
 
         [Route("app/account/register")]
         [HttpPost]
-        public IActionResult AppRegister([FromBody]AppRegisterModel model)
+        public IActionResult AppRegister([FromBody] AppRegisterModel model)
         {
             bool registerResponse = accountService.Register(model);
             if (registerResponse is true)
@@ -37,6 +38,40 @@ namespace MyWayAPI.Controllers.App
                 return Ok();
             }
             else return StatusCode(StatusCodes.Status500InternalServerError, new { message = "User already exists" });
+        }
+
+        [Route("app/account/companies")]
+        [HttpGet]
+        public IActionResult GetCompanies([FromHeader] string accessToken)
+        {
+            var stream = accessToken;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var userId = int.Parse(tokenS.Subject.ToString());
+
+            var companies = accountService.GetCompanies(userId);
+            return Ok(companies);
+        }
+
+        [Route("app/account/deleteCompany/{companyId}")]
+        [HttpPost]
+        public IActionResult DeleteCompany(int companyId, [FromHeader] string accessToken)
+        {
+            var stream = accessToken;
+            var handler = new JwtSecurityTokenHandler();
+            var jsonToken = handler.ReadToken(stream);
+            var tokenS = jsonToken as JwtSecurityToken;
+
+            var userId = int.Parse(tokenS.Subject.ToString());
+
+            var result = accountService.DeleteCompany(userId,  companyId);
+            if (result is true)
+            {
+                return Ok();
+            }
+            else return BadRequest();
         }
     }
 }

@@ -45,6 +45,7 @@ namespace MyWayAPI.Services
             var claims = new List<Claim>();
             var claim = new Claim("sub", userId.ToString());
             var accessClaim = new Claim("access", user.AccessLevel.ToString());
+            claims.Add(claim);
             claims.Add(accessClaim);
 
             var Sectoken = new JwtSecurityToken(config["Jwt:Issuer"],
