@@ -82,7 +82,7 @@ namespace MyWayAPI.Controllers
 
             var creatorAccess = tokenS.Claims.First(claim => claim.Type == "access").Value;
 
-            if (int.Parse(creatorAccess) > 0)
+            if (int.Parse(creatorAccess) == 0)
             {
                 return Unauthorized();
             }
@@ -101,7 +101,7 @@ namespace MyWayAPI.Controllers
 
             var creatorAccess = tokenS.Claims.First(claim => claim.Type == "access").Value;
 
-            if (int.Parse(creatorAccess) > 0)
+            if (int.Parse(creatorAccess) == 0)
             {
                 return Unauthorized();
             }

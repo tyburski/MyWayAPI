@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
+﻿using MailKit;
+using Microsoft.AspNetCore.Authorization.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions;
 using Microsoft.IdentityModel.Tokens;
 using MyWayAPI.Models;
@@ -8,6 +9,7 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace MyWayAPI.Services
 {
@@ -24,10 +26,12 @@ namespace MyWayAPI.Services
     {
         private IConfiguration config;
         private readonly MWDbContext dbContext;
-        public WebAccountService(IConfiguration config, MWDbContext dbContext)
+        private IMailService mailService;
+        public WebAccountService(IConfiguration config, MWDbContext dbContext, IMailService mailService)
         {
             this.config = config;
             this.dbContext = dbContext;
+            this.mailService = mailService;
         }
         public int? Login(LoginModel model)
         {
@@ -61,9 +65,11 @@ namespace MyWayAPI.Services
                     Company = crator.Company
                 };
                 newUser.SetEmailAddress(model.emailAddress);
-                newUser.SetPassword(model.password);
+                newUser.SetPassword(new PasswordBuilder().CreatePassword());
                 newUser.SetAccessLevel(1); //0 - niekatywny, 1 - zwykły użytkownik, 2 - administrator
                 dbContext.WebUsers.Add(newUser);
+                mailService.SendEmail(newUser.EmailAddress, "Rejestracja w systemie",
+                $"Witaj,{newUser.FirstName} Twój login to: {newUser.EmailAddress} \n, a wygenerowane hasło to: {newUser.Password}. \n Pamiętaj aby zmienić hasło jak najszybciej to możliwe!");
                 dbContext.SaveChanges();
                 return true;
             }

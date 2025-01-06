@@ -12,7 +12,7 @@ namespace MyWayAPI.Services
     public interface IAppAccountService
     {
         public int? Login(LoginModel model);
-        public bool Register(RegisterModel model);
+        public bool Register(AppRegisterModel model);
         public string GenerateToken(int? userId);
     }
     public class AppAccountService : IAppAccountService
@@ -37,7 +37,7 @@ namespace MyWayAPI.Services
             }
             else return null;
         }
-        public bool Register(RegisterModel model)
+        public bool Register(AppRegisterModel model)
         {
             var user = dbContext.AppUsers.FirstOrDefault(u => u.EmailAddress.Equals(model.emailAddress));
             if (user != null)

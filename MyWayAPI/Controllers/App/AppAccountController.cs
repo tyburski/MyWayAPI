@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWayAPI.Models;
+using MyWayAPI.Models.App;
 using MyWayAPI.Models.Web;
 using MyWayAPI.Services;
 
@@ -28,7 +29,7 @@ namespace MyWayAPI.Controllers.App
 
         [Route("app/account/register")]
         [HttpPost]
-        public IActionResult AppRegister([FromBody] RegisterModel model)
+        public IActionResult AppRegister([FromBody]AppRegisterModel model)
         {
             bool registerResponse = accountService.Register(model);
             if (registerResponse is true)

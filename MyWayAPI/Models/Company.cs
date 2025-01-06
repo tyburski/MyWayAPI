@@ -8,7 +8,6 @@ namespace MyWayAPI.Models
         public int Id { get; set; }
         public string Name { get; set; }
         public int TaxId { get; set; }
-        public WebUser Owner { get; set; }
         public List<WebUser> WebUsers { get; private set; }
         public List<AppUser> AppUsers { get; private set; }
 
