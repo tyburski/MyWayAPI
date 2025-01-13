@@ -10,14 +10,7 @@ namespace MyWayAPI.TypesConfigurations
         {
             builder.HasKey(u => u.Id);
 
-            builder.HasMany(u => u.Routes)
-                .WithOne(u => u.Company)
-                .HasForeignKey(u => u.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-            builder.HasMany(u => u.Invitations)
-                .WithOne(u => u.Company)
-                .HasForeignKey(u => u.Id)
-                .OnDelete(DeleteBehavior.Cascade);
+            
 
         }
     }

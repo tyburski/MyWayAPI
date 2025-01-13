@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MyWayAPI.Services.App;
 using System.IdentityModel.Tokens.Jwt;
 
@@ -47,17 +48,21 @@ namespace MyWayAPI.Controllers.App
         }
 
         [Route("app/vehicles")]
-        [HttpPost]
+        [HttpGet]
         public IActionResult GetVehicles([FromHeader]string accessToken)
         {
+            Console.WriteLine(accessToken);
             var stream = accessToken;
             var handler = new JwtSecurityTokenHandler();
             var jsonToken = handler.ReadToken(stream);
             var tokenS = jsonToken as JwtSecurityToken;
+            
 
             var userId = int.Parse(tokenS.Subject.ToString());
+            
 
             var result = vehicleService.GetVehicles(userId);
+            Console.WriteLine(result);
             return Ok(result);
         }
 

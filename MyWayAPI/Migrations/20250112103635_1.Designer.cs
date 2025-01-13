@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MyWayAPI;
 
@@ -11,9 +12,11 @@ using MyWayAPI;
 namespace MyWayAPI.Migrations
 {
     [DbContext(typeof(MWDbContext))]
-    partial class MWDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250112103635_1")]
+    partial class _1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -152,15 +155,6 @@ namespace MyWayAPI.Migrations
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
-
-                    b.Property<DateTime?>("DropDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<float?>("DropLatitude")
-                        .HasColumnType("real");
-
-                    b.Property<float?>("DropLongitude")
-                        .HasColumnType("real");
 
                     b.Property<string>("EventName")
                         .IsRequired()

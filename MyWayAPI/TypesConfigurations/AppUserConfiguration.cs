@@ -11,18 +11,16 @@ namespace MyWayAPI.TypesConfigurations
             builder.HasKey(u => u.Id);
 
             builder.HasMany(u => u.Companies)
-                .WithMany(u => u.AppUsers);
-            builder.HasMany(u => u.Invitations)
                 .WithOne(u => u.AppUser)
-                .HasForeignKey(u => u.Id)
+                .HasForeignKey(u => u.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(u=>u.Vehicles)
                 .WithOne(u=>u.AppUser)
-                .HasForeignKey(u => u.Id)
+                .HasForeignKey(u => u.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
             builder.HasMany(u=>u.Routes)
                 .WithOne(u=>u.AppUser)
-                .HasForeignKey(u => u.Id)
+                .HasForeignKey(u => u.AppUserId)
                 .OnDelete(DeleteBehavior.Cascade);
         }
     }

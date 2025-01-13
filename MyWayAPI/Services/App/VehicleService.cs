@@ -25,7 +25,7 @@ namespace MyWayAPI.Services.App
             var checkVehicle = user.Vehicles.FirstOrDefault(v => v.LicensePlate.Equals(licensePlate));
             if(checkVehicle is not null) return false;
 
-            var newVeh = new Vehicle() { LicensePlate = licensePlate.ToUpper(), Type = type };
+            var newVeh = new Vehicle() { AppUser = user, LicensePlate = licensePlate.ToUpper(), Type = type.ToUpper() };
             dbContext.Vehicles.Add(newVeh);
             dbContext.SaveChanges();
             return true;
@@ -48,8 +48,8 @@ namespace MyWayAPI.Services.App
 
         public List<Vehicle> GetVehicles(int userId)
         {
-            var user = dbContext.AppUsers.Include(u => u.Vehicles).FirstOrDefault(u => u.Id == userId);
-            if(user is not null) return user.Vehicles;
+            var vehicles = dbContext.Vehicles.Where(v => v.AppUserId == userId).ToList();
+            if(vehicles is not null) return vehicles;
             else return new List<Vehicle>();
 
         }

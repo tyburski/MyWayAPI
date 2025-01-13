@@ -20,7 +20,6 @@ builder.Services.AddDbContext<MWDbContext>();
 
 builder.Services.AddScoped<IAppAccountService, AppAccountService>();
 builder.Services.AddScoped<IWebAccountService, WebAccountService>();
-builder.Services.AddScoped<IInvitationService, InvitationService>();
 builder.Services.AddScoped<ICompanyService, CompanyService>();
 builder.Services.AddScoped<IAdminService, AdminService>();
 builder.Services.AddScoped<IMailService, MailService>();

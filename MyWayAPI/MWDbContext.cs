@@ -12,7 +12,6 @@ namespace MyWayAPI
         public DbSet<AppUser> AppUsers { get; set; }
         public DbSet<WebUser> WebUsers { get; set; }
         public DbSet<Company> Companies { get; set; }
-        public DbSet<Invitation> Invitations { get; set; }
         public DbSet<Vehicle> Vehicles { get; set; }
         public DbSet<Models.Route> Routes { get; set; }
         public DbSet<RouteEvent> RouteEvents { get; set; }

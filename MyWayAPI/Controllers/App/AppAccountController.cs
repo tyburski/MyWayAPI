@@ -16,7 +16,7 @@ namespace MyWayAPI.Controllers.App
             this.accountService = accountService;
         }
 
-        [Route("app/account/login")]
+        [Route("account/login")]
         [HttpPost]
         public IActionResult AppLogin([FromBody] LoginModel model)
         {

@@ -52,7 +52,6 @@ namespace MyWayAPI.Services
                 {
                     FirstName = model.firstName,
                     LastName = model.lastName,
-                    startedRoute = null
                 };
                 newUser.SetEmailAddress(model.emailAddress);
                 newUser.SetPassword(model.password);
@@ -98,7 +97,6 @@ namespace MyWayAPI.Services
             else
             {
                 user.Companies.Remove(company);
-                company.AppUsers.Remove(user);
                 dbContext.SaveChanges();
                 return true;
             }
