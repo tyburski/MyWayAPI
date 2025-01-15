@@ -9,9 +9,6 @@ namespace MyWayAPI.TypesConfigurations
         public void Configure(EntityTypeBuilder<Company> builder)
         {
             builder.HasKey(u => u.Id);
-
-            
-
         }
     }
 }

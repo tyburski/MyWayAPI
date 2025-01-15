@@ -7,8 +7,13 @@
         public DateTime Date { get; set; }
         public float Latitude { get; set; }
         public float Longitude { get; set; }
+        public int RouteId { get; set; }
+        public Route Route { get; set; }
 
-        public string Country { get; set; }
+        public float? RefuelCount { get; set; }
+        public float? RefuelTotal { get; set; }
+        public string? RefuelCurrency { get; set; }
+        public string? RefuelType { get; set; }
 
         public float? PickupCount { get; set; }
         public float? PickupWeight { get; set; }
@@ -17,16 +22,7 @@
         public float? DropLatitude { get; set; }
         public float? DropLongitude { get; set; }
 
-
-        public float? RefuelCount { get; set; }
-        public float? RefuelTotal { get; set; }
-        public string? RefuelCurrency { get; set; }
-        public string? RefuelType { get; set; }
-
         public string? BorderFrom { get; set; }
         public string? BorderTo { get; set; }
-
-        public int RouteId { get; set; }
-        public Route Route { get; set; }
     }
 }

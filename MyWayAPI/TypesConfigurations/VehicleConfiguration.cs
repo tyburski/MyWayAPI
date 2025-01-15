@@ -8,9 +8,7 @@ namespace MyWayAPI.TypesConfigurations
     {
         public void Configure(EntityTypeBuilder<Vehicle> builder)
         {
-            builder.HasKey(u => u.Id);
-
-            
+            builder.HasKey(u => u.Id);           
         }
     }
 }
