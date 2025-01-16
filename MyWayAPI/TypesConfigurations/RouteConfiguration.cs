@@ -9,14 +9,19 @@ namespace MyWayAPI.TypesConfigurations
         {
             builder.HasKey(u => u.Id);
 
+
             builder.HasOne(u => u.Company)
                 .WithMany(u => u.Routes)
                 .HasForeignKey(u => u.CompanyId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
+
+            
             builder.HasOne(u => u.Vehicle)
                 .WithMany(u => u.Routes)
                 .HasForeignKey(u => u.VehicleId)
-                .OnDelete(DeleteBehavior.NoAction);
+                .OnDelete(DeleteBehavior.SetNull);
+
+
             builder.HasMany(u => u.RouteEvents)
                 .WithOne(u => u.Route)
                 .HasForeignKey(u => u.RouteId)

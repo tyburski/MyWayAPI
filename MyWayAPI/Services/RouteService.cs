@@ -38,7 +38,7 @@ namespace MyWayAPI.Services
             if (startedRoute) return false;
             else
             {
-                var route = new Models.Route() { User = user, Company = company, Vehicle = vehicle, Finished = false };
+                var route = new Models.Route() { User = user, Company = company, Vehicle = vehicle, Finished = false, CurrentCountry = body.Country };
                 var startEvent = new RouteEvent()
                 {
                     EventName = "start",
@@ -61,7 +61,7 @@ namespace MyWayAPI.Services
                 var newEvent = new RouteEvent
                 {
                     EventName = "border",
-                    Date = new DateTime(),
+                    Date = DateTime.Now,
                     Latitude = body.Latitude,
                     Longitude = body.Longitude,
                     PickupCount = null,
@@ -94,7 +94,7 @@ namespace MyWayAPI.Services
                 var newEvent = new RouteEvent
                 {
                     EventName = "pickup",
-                    Date = new DateTime(),
+                    Date = DateTime.Now,
                     Latitude = body.Latitude,
                     Longitude = body.Longitude,
                     PickupCount = body.PickupCount,
@@ -125,7 +125,7 @@ namespace MyWayAPI.Services
                 var newEvent = new RouteEvent
                 {
                     EventName = "refuel",
-                    Date = new DateTime(),
+                    Date = DateTime.Now,
                     Latitude = body.Latitude,
                     Longitude = body.Longitude,
                     PickupCount = null,
@@ -153,7 +153,7 @@ namespace MyWayAPI.Services
             var routeEvent = dbContext.RouteEvents.FirstOrDefault(r => r.Id == body.EventId);
             if (routeEvent is not null && routeEvent.PickupWeight is not null && routeEvent.PickupCount is not null)
             {
-                routeEvent.DropDate = new DateTime();
+                routeEvent.DropDate = DateTime.Now;
                 routeEvent.DropLatitude = body.DropLatitude;
                 routeEvent.DropLongitude = body.DropLongitude;
                 dbContext.RouteEvents.Update(routeEvent);

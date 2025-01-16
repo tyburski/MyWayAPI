@@ -38,7 +38,9 @@ namespace MyWayAPI.Services
             var vehicle = user.Vehicles.FirstOrDefault(v => v.Id == vehicleId);
             if (vehicle is null) return false;
 
-            dbContext.Vehicles.Remove(vehicle);
+            vehicle.User = null;
+
+            dbContext.Vehicles.Update(vehicle);
             dbContext.SaveChanges();
             return true;
         }

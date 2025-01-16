@@ -36,18 +36,20 @@ namespace MyWayAPI.Services
         }
         public bool DeleteCompany(int? userId, int companyId)
         {
-            var user = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = dbContext.Users.Include(u=>u.Companies).FirstOrDefault(u => u.Id == userId);
             if (user is null) return false;
             var company = user.Companies.FirstOrDefault(c => c.Id == companyId);
             if (company is null) return false;
 
-            user.Companies.Remove(company);
+            company.User = null;
+
+            dbContext.Companies.Update(company);
             dbContext.SaveChanges();
             return true;
         }
         public List<Company> GetCompanies(int? userId)
         {
-            var user = dbContext.Users.FirstOrDefault(u => u.Id == userId);
+            var user = dbContext.Users.Include(u=>u.Companies).FirstOrDefault(u => u.Id == userId);
             if (user is null) return [];
             return user.Companies;
         }      
