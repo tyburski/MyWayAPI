@@ -47,7 +47,6 @@ namespace MyWayAPI.Controllers.Web
             if (userId is null) return Unauthorized("Invalid token");
 
             var result = companyService.GetCompanies(userId);
-            Console.WriteLine(result);
             return Ok(result);
         }
     }

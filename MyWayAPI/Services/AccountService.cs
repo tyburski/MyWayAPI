@@ -14,6 +14,8 @@ namespace MyWayAPI.Services
         public bool Register(RegisterModel model);
         public string GenerateToken(int? userId);
         public User GetUser(int? userId);
+        public bool Delete(int? id);
+        public bool ChangePassword(int? id, string password);
     }
     public class AccountService : IAccountService
     {
@@ -27,8 +29,10 @@ namespace MyWayAPI.Services
         public int? Login(string username, string password)
         {
             var user = dbContext.Users.FirstOrDefault(u => u.EmailAddress.Equals(username));
+            
             if (user != null)
             {
+                if (user.RemovedAt is not null || user.EmailAddress.Equals("[deleted]")) return null;
                 if (password.Equals(user.Password))
                 {
                     return user.Id;
@@ -47,10 +51,36 @@ namespace MyWayAPI.Services
                 {
                     FirstName = model.FirstName,
                     LastName = model.LastName,
+                    CreatedAt = DateTime.Now
                 };
                 newUser.SetEmailAddress(model.EmailAddress);
                 newUser.SetPassword(model.Password);
                 dbContext.Users.Add(newUser);
+                dbContext.SaveChanges();
+                return true;
+            }
+        }
+        public bool Delete(int? id)
+        {
+            var user = dbContext.Users.FirstOrDefault(u => u.Id == id);
+            if (user is null) return false;
+            else
+            {
+                user.RemovedAt = DateTime.Now;
+                user.SetEmailAddress("[deleted]");
+                dbContext.Users.Update(user);
+                dbContext.SaveChanges();
+                return true;
+            }
+        }
+        public bool ChangePassword(int? id, string password)
+        {
+            var user = dbContext.Users.FirstOrDefault(u => u.Id == id);
+            if (user is null) return false;
+            else
+            {
+                user.SetPassword(password);
+                dbContext.Users.Update(user);
                 dbContext.SaveChanges();
                 return true;
             }

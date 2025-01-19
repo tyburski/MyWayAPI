@@ -47,9 +47,10 @@ namespace MyWayAPI.Services
 
         public List<Vehicle> GetVehicles(int? userId)
         {
-            var vehicles = dbContext.Vehicles.Where(v => v.UserId == userId).ToList();
-            if (vehicles is null) return [];
-            else return vehicles;
+            var user = dbContext.Users.Include(u => u.Vehicles).FirstOrDefault(u => u.Id == userId);
+            if (user is null) return null;
+            if (user.Vehicles.Count < 1) return null;
+            else return user.Vehicles;
         }
     }
 }

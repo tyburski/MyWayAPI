@@ -1,4 +1,6 @@
-﻿namespace MyWayAPI.Models
+﻿using Microsoft.EntityFrameworkCore.Migrations.Operations;
+
+namespace MyWayAPI.Models
 {
     public class User
     {
@@ -7,6 +9,8 @@
         public string LastName { get; set; }
         public string EmailAddress { get; private set; }
         public string Password { get; private set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime? RemovedAt {get; set;}
         public List<Company> Companies { get; set; }
         public List<Vehicle> Vehicles { get; set; }
         public List<Route> Routes { get; set; }

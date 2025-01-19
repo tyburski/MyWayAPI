@@ -158,6 +158,9 @@ namespace MyWayAPI.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
+                    b.Property<DateTime>("CreatedAt")
+                        .HasColumnType("datetime2");
+
                     b.Property<string>("EmailAddress")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -173,6 +176,9 @@ namespace MyWayAPI.Migrations
                     b.Property<string>("Password")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime?>("RemovedAt")
+                        .HasColumnType("datetime2");
 
                     b.HasKey("Id");
 
@@ -210,7 +216,7 @@ namespace MyWayAPI.Migrations
                     b.HasOne("MyWayAPI.Models.User", "User")
                         .WithMany("Companies")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("User");
                 });
@@ -220,7 +226,7 @@ namespace MyWayAPI.Migrations
                     b.HasOne("MyWayAPI.Models.Company", "Company")
                         .WithMany("Routes")
                         .HasForeignKey("CompanyId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.HasOne("MyWayAPI.Models.User", "User")
@@ -232,7 +238,7 @@ namespace MyWayAPI.Migrations
                     b.HasOne("MyWayAPI.Models.Vehicle", "Vehicle")
                         .WithMany("Routes")
                         .HasForeignKey("VehicleId")
-                        .OnDelete(DeleteBehavior.SetNull)
+                        .OnDelete(DeleteBehavior.NoAction)
                         .IsRequired();
 
                     b.Navigation("Company");
@@ -247,7 +253,7 @@ namespace MyWayAPI.Migrations
                     b.HasOne("MyWayAPI.Models.Route", "Route")
                         .WithMany("RouteEvents")
                         .HasForeignKey("RouteId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Route");
@@ -258,7 +264,7 @@ namespace MyWayAPI.Migrations
                     b.HasOne("MyWayAPI.Models.User", "User")
                         .WithMany("Vehicles")
                         .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .OnDelete(DeleteBehavior.NoAction);
 
                     b.Navigation("User");
                 });

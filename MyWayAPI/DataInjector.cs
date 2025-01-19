@@ -15,7 +15,8 @@ namespace MyWayAPI
                     var newUser = new User
                     {
                         FirstName = "Dawid",
-                        LastName = "Tyburski"
+                        LastName = "Tyburski",
+                        CreatedAt = DateTime.Now,
                     };
                     newUser.SetEmailAddress("dtyburski0@gmail.com");
                     newUser.SetPassword("1234");

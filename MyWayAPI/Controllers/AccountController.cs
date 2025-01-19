@@ -37,6 +37,31 @@ namespace MyWayAPI.Controllers
             if (registerResponse is true) return Created();
             else return BadRequest("User already exists");
         }
+
+        [Route("api/account/delete")]
+        [HttpPost]
+        public IActionResult Delete([FromHeader] string accessToken)
+        {
+            var userId = tokenDecoder.Decode(accessToken);
+            if (userId is null) return Unauthorized("Invalid token");
+
+            var result = accountService.Delete(userId);
+            if (result is false) return BadRequest();
+            else return Ok(result);
+        }
+
+        [Route("api/account/changePassword")]
+        [HttpPost]
+        public IActionResult ChangePassword([FromHeader] string accessToken, [FromQuery]string password)
+        {
+            var userId = tokenDecoder.Decode(accessToken);
+            if (userId is null) return Unauthorized("Invalid token");
+
+            var result = accountService.ChangePassword(userId, password);
+            if (result is false) return BadRequest();
+            else return Ok(result);
+        }
+
         [Route("api/account/getUser")]
         [HttpGet]
         public IActionResult GetUser([FromHeader] string accessToken)

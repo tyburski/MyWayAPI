@@ -50,8 +50,9 @@ namespace MyWayAPI.Services
         public List<Company> GetCompanies(int? userId)
         {
             var user = dbContext.Users.Include(u=>u.Companies).FirstOrDefault(u => u.Id == userId);
-            if (user is null) return [];
-            return user.Companies;
+            if (user is null) return null;
+            if (user.Companies.Count < 1) return null;
+            else return user.Companies;
         }      
     }
 }
