@@ -13,6 +13,7 @@ namespace MyWayAPI.Services
         public int? Login(string username, string password);
         public bool Register(RegisterModel model);
         public string GenerateToken(int? userId);
+        public User GetUser(int? userId);
     }
     public class AccountService : IAccountService
     {
@@ -72,6 +73,13 @@ namespace MyWayAPI.Services
             var token = new JwtSecurityTokenHandler().WriteToken(Sectoken);
 
             return token;
+        }
+        public User GetUser(int? userId)
+        {
+            if (userId is null) return null;
+            var user = dbContext.Users.FirstOrDefault(u=>u.Id == userId);
+            if (user is null) return null;
+            else return user;
         }
     }
 }

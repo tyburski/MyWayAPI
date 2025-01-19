@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using MyWayAPI.Models;
 using MyWayAPI.Models.Body;
+using MyWayAPI.Models.RequestModels;
 using MyWayAPI.Services;
 
 namespace MyWayAPI.Controllers
@@ -9,9 +10,11 @@ namespace MyWayAPI.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
-        public AccountController(IAccountService accountService)
+        private readonly ITokenDecoder tokenDecoder;
+        public AccountController(IAccountService accountService, ITokenDecoder tokenDecoder)
         {
             this.accountService = accountService;
+            this.tokenDecoder = tokenDecoder;
         }
 
         [Route("api/account/login")]
@@ -33,6 +36,18 @@ namespace MyWayAPI.Controllers
             bool registerResponse = accountService.Register(model);
             if (registerResponse is true) return Created();
             else return BadRequest("User already exists");
-        }      
+        }
+        [Route("api/account/getUser")]
+        [HttpGet]
+        public IActionResult GetUser([FromHeader] string accessToken)
+        {
+            var userId = tokenDecoder.Decode(accessToken);
+            if (userId is null) return Unauthorized("Invalid token");
+
+            var result = accountService.GetUser(userId);
+            if (result is null) return BadRequest();
+            else return Ok(result);
     }
+    }
+    
 }
