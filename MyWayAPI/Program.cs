@@ -22,6 +22,7 @@ builder.Services.AddScoped<IMailService, MailService>();
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 builder.Services.AddScoped<IRouteService, RouteService>();
 builder.Services.AddScoped<ITokenDecoder, TokenDecoder>();
+builder.Services.AddScoped<IReportService, ReportService>();
 
 builder.Services.AddControllers().AddJsonOptions(x =>
                 x.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles);

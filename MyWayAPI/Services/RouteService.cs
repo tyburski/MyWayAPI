@@ -2,6 +2,7 @@
 using MyWayAPI.Models;
 using MyWayAPI.Models.Body;
 using MyWayAPI.Models.RequestModels;
+using NPOI.XWPF.UserModel;
 
 namespace MyWayAPI.Services
 {
@@ -13,14 +14,16 @@ namespace MyWayAPI.Services
         public bool NewRefuel(CreateRefuelModel body);
         public bool Drop(DropModel body);
         public Models.Route? GetStartedRoute(int? userId);
-        public bool FinishRoute(int routeId, int? userId);
+        public bool FinishRoute(FinishModel model, int? userId);
     }
     public class RouteService : IRouteService
     {
         private readonly MWDbContext dbContext;
-        public RouteService(MWDbContext dbContext)
+        private readonly IReportService reportService;
+        public RouteService(MWDbContext dbContext, IReportService reportService)
         {
             this.dbContext = dbContext;
+            this.reportService = reportService;
         }
         public bool StartRoute(int? userId, StartModel body)
         {
@@ -176,16 +179,40 @@ namespace MyWayAPI.Services
             }
             return null;
         }
-        public bool FinishRoute(int routeId, int? userId)
+        public bool FinishRoute(FinishModel model, int? userId)
         {
-            var route = dbContext.Routes.FirstOrDefault(r => r.Id == routeId);
+            var route = dbContext.Routes.FirstOrDefault(r => r.Id == model.RouteId);
             var user = dbContext.Users.FirstOrDefault(u => u.Id == userId);
             if (route is null || route.User != user) return false;
             else
             {
+                var newEvent = new RouteEvent
+                {
+                    EventName = "finish",
+                    Date = DateTime.Now,
+                    Latitude = model.Latitude,
+                    Longitude = model.Longitude,
+                    PickupCount = null,
+                    PickupWeight = null,
+                    PickupComment = null,
+                    DropDate = null,
+                    DropLatitude = null,
+                    DropLongitude = null,
+                    RefuelCount = null,
+                    RefuelTotal = null,
+                    RefuelCurrency = null,
+                    RefuelType = null,
+                    BorderFrom = null,
+                    BorderTo = null,
+                    Route = route
+                };
                 route.Finished = true;
                 dbContext.Routes.Update(route);
+                dbContext.RouteEvents.Update(newEvent);
                 dbContext.SaveChanges();
+
+                reportService.GenerateReport(route.Id);
+
                 return true;
             }
         }

@@ -1,32 +1,35 @@
 ﻿using MimeKit;
 using MailKit.Net.Smtp;
+using MyWayAPI.Models;
+using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace MyWayAPI.Services
 {
     public interface IMailService
     {
-        public void SendEmail(string sendTo, string subject, string body);
+        public void SendEmail(string sendTo, string subject, string fileName);
     }
     public class MailService: IMailService
     {
 
-        public void SendEmail(string sendTo, string subject, string body)
+        public void SendEmail(string sendTo, string subject, string fileName)
         {
             var message = new MimeMessage();
-            message.From.Add(new MailboxAddress("MyWay System", "support@mw.com"));
+            message.From.Add(new MailboxAddress("MyWay System", "tyburski@post.pl"));
             message.To.Add(new MailboxAddress(sendTo, sendTo));
             message.Subject = subject;
 
-            message.Body = new TextPart("plain")
-            {
-                Text = @$"{body}"
-            };
+            var bodyBuilder = new BodyBuilder();
+            bodyBuilder.TextBody = "Szanowni Państwo,\nW załączniku znajduje się raport z trasy przedstawionej w temacie wiadomości.\n\nZ poważaniem,\nMyWay System";
+            bodyBuilder.Attachments.Add($"./{fileName}");
+            message.Body = bodyBuilder.ToMessageBody();
+
 
             using (var client = new SmtpClient())
             {
-                client.Connect("smtp-relay.gmail.com", 587, false);
+                client.Connect("post.pl", 587, false);
 
-                client.Authenticate("suport@mw.com", "xqro ttlg uxvc ccbv");
+                client.Authenticate("tyburski@post.pl", "VaFYy8Wj");
 
                 client.Send(message);
                 client.Disconnect(true);

@@ -15,6 +15,7 @@
         public string? RefuelCurrency { get; set; }
         public string? RefuelType { get; set; }
 
+
         public float? PickupCount { get; set; }
         public float? PickupWeight { get; set; }
         public string? PickupComment { get; set; }

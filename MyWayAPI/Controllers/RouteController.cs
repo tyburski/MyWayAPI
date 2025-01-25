@@ -30,7 +30,17 @@ namespace MyWayAPI.Controllers
             if (result is true) return Created();
             else return BadRequest("Unable to create");
         }
+        [Route("api/route/finish")]
+        [HttpPost]
+        public IActionResult FinishRoute([FromHeader] string accessToken, [FromBody]FinishModel model)
+        {
+            var userId = tokenDecoder.Decode(accessToken);
+            if (userId is null) return Unauthorized("Invalid token");
 
+            var result = routeService.FinishRoute(model, userId);
+            if (result is true) return Ok();
+            else return BadRequest();
+        }
         [Route("api/pickup/create")]
         [HttpPost]
         public IActionResult CreatePickup([FromBody] CreatePickupModel body)
@@ -78,16 +88,6 @@ namespace MyWayAPI.Controllers
             return Ok(result);
         }
         
-        [Route("api/route/finish")]
-        [HttpPost]
-        public IActionResult FinishRoute([FromHeader] string accessToken, [FromQuery] int routeId)
-        {
-            var userId = tokenDecoder.Decode(accessToken);
-            if (userId is null) return Unauthorized("Invalid token");
-
-            var result = routeService.FinishRoute(routeId, userId);
-            if (result is true) return Ok();
-            else return BadRequest();
-        }
+       
     }
 }
