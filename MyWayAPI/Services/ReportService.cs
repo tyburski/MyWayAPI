@@ -17,7 +17,7 @@ namespace MyWayAPI.Services
 {
     public interface IReportService
     {
-        public async void GenerateReport(int id)
+        public async void GenerateReport(int id, bool forUser)
         {
             throw new NotImplementedException();
         }
@@ -33,7 +33,7 @@ namespace MyWayAPI.Services
             this.mailService = mailService;
         }
 
-        public async void GenerateReport(int id)
+        public async void GenerateReport(int id, bool forUser)
         {
 
             var route = dbContext.Routes.Include(r=>r.RouteEvents).Include(r=>r.User).Include(r => r.Vehicle).Include(r => r.Company).FirstOrDefault(r=>r.Id == id);
@@ -281,7 +281,16 @@ namespace MyWayAPI.Services
             using (FileStream stream = new FileStream(fileName, FileMode.Create, FileAccess.Write))
             {
                 wb.Write(stream);
-                mailService.SendEmail(route.Company.Email, $"{route.User.FirstName} {route.User.LastName} {route.Vehicle.LicensePlate} {route.RouteEvents.First().Date.ToShortDateString()} - {route.RouteEvents.Last().Date.ToShortDateString()}", fileName);
+                var sendTo = "";
+                if(forUser is true)
+                {
+                    sendTo = route.User.EmailAddress;
+                }
+                else
+                {
+                    sendTo = route.Company.Email;
+                }
+                mailService.SendEmail(sendTo, $"{route.User.FirstName} {route.User.LastName} {route.Vehicle.LicensePlate} {route.RouteEvents.First().Date.ToShortDateString()} - {route.RouteEvents.Last().Date.ToShortDateString()}", fileName);
             }
             System.IO.File.Delete($"./{fileName}");
         }

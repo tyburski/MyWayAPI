@@ -87,6 +87,17 @@ namespace MyWayAPI.Controllers
             var result = routeService.GetStartedRoute(userId);
             return Ok(result);
         }
+
+        [Route("api/route/getAll")]
+        [HttpGet]
+        public IActionResult GetAll([FromHeader] string accessToken)
+        {
+            var userId = tokenDecoder.Decode(accessToken);
+            if (userId is null) return Unauthorized("Invalid token");
+
+            var result = routeService.GetAll(userId);
+            return Ok(result);
+        }
         
        
     }

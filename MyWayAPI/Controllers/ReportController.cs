@@ -17,9 +17,9 @@ namespace MyWayAPI.Controllers
 
         [Route("api/report/generate")]
         [HttpPost]
-        public IActionResult GetReport([FromQuery]int id)
+        public IActionResult GetReport([FromQuery]int id, [FromQuery]bool forUser)
         {
-            reportService.GenerateReport(id);
+            reportService.GenerateReport(id, forUser);
             return Ok();
         }
     }

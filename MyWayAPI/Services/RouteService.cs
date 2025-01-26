@@ -14,6 +14,7 @@ namespace MyWayAPI.Services
         public bool NewRefuel(CreateRefuelModel body);
         public bool Drop(DropModel body);
         public Models.Route? GetStartedRoute(int? userId);
+        public List<Models.Route?> GetAll(int? userId);
         public bool FinishRoute(FinishModel model, int? userId);
     }
     public class RouteService : IRouteService
@@ -179,6 +180,20 @@ namespace MyWayAPI.Services
             }
             return null;
         }
+        public List<Models.Route?> GetAll(int? userId)
+        {
+            var user = dbContext.Users.Include(u => u.Routes).ThenInclude(r => r.RouteEvents).FirstOrDefault(u => u.Id == userId);
+            if (user is null) return null;
+
+            var routes = user.Routes.Where(r => r.Finished == true).ToList();
+            if (routes is null) return null;
+
+            if (routes is not null)
+            {
+                return routes;
+            }
+            return null;
+        }
         public bool FinishRoute(FinishModel model, int? userId)
         {
             var route = dbContext.Routes.FirstOrDefault(r => r.Id == model.RouteId);
@@ -211,7 +226,7 @@ namespace MyWayAPI.Services
                 dbContext.RouteEvents.Update(newEvent);
                 dbContext.SaveChanges();
 
-                reportService.GenerateReport(route.Id);
+                reportService.GenerateReport(route.Id, false);
 
                 return true;
             }
