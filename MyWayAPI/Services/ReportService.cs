@@ -1,17 +1,8 @@
-﻿using Azure.Core.GeoJson;
-using Geocoding.Google;
-using Geocoding;
+﻿using Geocoding.Google;
 using Microsoft.EntityFrameworkCore;
 using MyWayAPI.Models;
-using Newtonsoft.Json;
-using Newtonsoft.Json.Linq;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
-using NPOI.SS.Util;
-using static System.Net.WebRequestMethods;
-using NPOI.HSSF.UserModel;
-using Microsoft.IdentityModel.Tokens;
-using NPOI.SS.Formula.Functions;
 
 namespace MyWayAPI.Services
 {

@@ -1,7 +1,5 @@
 ﻿using MimeKit;
 using MailKit.Net.Smtp;
-using MyWayAPI.Models;
-using Microsoft.AspNetCore.Routing.Constraints;
 
 namespace MyWayAPI.Services
 {

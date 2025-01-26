@@ -1,5 +1,4 @@
-﻿using Microsoft.AspNetCore.Authorization.Infrastructure;
-using Microsoft.IdentityModel.Tokens;
+﻿using Microsoft.IdentityModel.Tokens;
 using MyWayAPI.Models;
 using MyWayAPI.Models.Body;
 using System.IdentityModel.Tokens.Jwt;
